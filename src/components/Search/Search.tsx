@@ -1,8 +1,9 @@
-import { AriaTextFieldProps, useTextField } from "react-aria";
+import { useSearchFieldState } from "react-stately";
+import { useSearchField, AriaSearchFieldProps } from "react-aria";
 import { useRef, ReactNode, CSSProperties } from "react";
-import { Container, MyInput, MyLabel, ErrorMessage } from "./inputStyle";
-export interface InputProps extends AriaTextFieldProps {
-  label: ReactNode;
+import { Container, MyInput, MyLabel, CancleButton } from "./searchStyle";
+export interface SearchProps extends AriaSearchFieldProps {
+  label?: ReactNode;
   width?: string;
   height?: string;
   fontSize?: string;
@@ -12,12 +13,12 @@ export interface InputProps extends AriaTextFieldProps {
   backColor?: string;
   style?: CSSProperties;
 }
-const Input = (props: InputProps) => {
+const Search = (props: SearchProps) => {
   const inputRef = useRef(null);
   const labelRef = useRef<HTMLLabelElement>(null);
-
+  const state = useSearchFieldState(props);
   const {
-    label,
+    label = "search",
     width = "10rem",
     height = "1.8rem",
     fontSize = "1.2rem",
@@ -26,16 +27,14 @@ const Input = (props: InputProps) => {
     fontColor = "#000000",
     isDisabled = false,
     backColor = "transparent",
-    type = "text",
+    type = "search",
     style,
   } = props;
-  const {
-    labelProps,
-    inputProps,
-    errorMessageProps,
-    isInvalid,
-    validationErrors,
-  } = useTextField(props, inputRef);
+  const { labelProps, inputProps, clearButtonProps } = useSearchField(
+    props,
+    state,
+    inputRef
+  );
   return (
     <Container style={style}>
       <MyLabel
@@ -62,12 +61,10 @@ const Input = (props: InputProps) => {
         color={fontColor}
         backColor={backColor}
       ></MyInput>
-      {isInvalid && (
-        <ErrorMessage {...errorMessageProps}>
-          {validationErrors.join("")}
-        </ErrorMessage>
+      {state.value !== "" && (
+        <CancleButton {...clearButtonProps}>❎</CancleButton>
       )}
     </Container>
   );
 };
-export default Input;
+export default Search;

@@ -1,29 +1,51 @@
+import { useRef, CSSProperties, RefObject } from "react";
 import { useButton } from "react-aria";
 import { AriaButtonOptions } from "react-aria";
-import React from "react";
-import styled from "@emotion/styled";
-const MyButton = styled.button<{ isPressed: boolean }>`
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 0.5em 1em;
-  font-size: 1em;
-  cursor: pointer;
-  &:hover {
-    background-color: #f4f4f4;
-  }
-  color: ${(props) => (props.isPressed ? "#e82424" : "blue")};
-`;
+import { MyButton } from "./buttonStyle";
 export interface ButtonProps extends AriaButtonOptions<"button"> {
-  children: React.ReactNode;
+  label?: string;
+  width?: string;
+  height?: string;
+  fontColor?: string;
+  frontColor?: string;
+  backColor?: string;
+  fontSize?: string;
+  borderColor?: string;
+  style?: CSSProperties;
+  Ref?: RefObject<HTMLButtonElement>;
 }
 const Button = (props: ButtonProps) => {
-  const buttonRef = React.useRef(null);
-  const { children } = props;
-  const { buttonProps, isPressed } = useButton(props, buttonRef);
+  const {
+    style,
+    label = "",
+    width = "4rem",
+    height = "1.8rem",
+    fontColor = "#fff",
+    frontColor = "#000",
+    backColor = "#fff",
+    borderColor = "#000",
+    fontSize = "1rem",
+    isDisabled = false,
+    Ref,
+  } = props;
+  const buttonRef = useRef(null);
+  const { buttonProps } = useButton(props, Ref !== undefined ? Ref : buttonRef);
+
   return (
-    <MyButton {...buttonProps} ref={buttonRef} isPressed={isPressed}>
-      {children}
-    </MyButton>
+    <MyButton
+      style={style}
+      {...buttonProps}
+      label={label}
+      width={width}
+      height={height}
+      fontColor={fontColor}
+      frontColor={frontColor}
+      backColor={backColor}
+      fontSize={fontSize}
+      borderColor={borderColor}
+      disabled={isDisabled}
+      ref={Ref !== undefined ? Ref : buttonRef}
+    ></MyButton>
   );
 };
 export default Button;

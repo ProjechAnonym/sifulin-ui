@@ -4,11 +4,13 @@ import typescript from "@rollup/plugin-typescript";
 import nodeExternals from "rollup-plugin-node-externals";
 import babel from "@rollup/plugin-babel";
 import replace from "@rollup/plugin-replace";
+import terser from "@rollup/plugin-terser";
+import analyzer from "rollup-plugin-analyzer";
 import path from "path";
-
 import pkg from "./package.json" assert { type: "json" };
 export default [
   {
+    treeshake: true,
     input: "./src/main.ts", // 入口文件
     output: [
       {
@@ -21,7 +23,14 @@ export default [
         preserveModulesRoot: "src", // 将保留的模块放在根级别的此路径下
       },
     ],
-    external: ["react", "react-dom", "@emotion/react", "@emotion/styled"],
+    external: [
+      "react",
+      "react-dom",
+      "typescript",
+      "react-aria",
+      "@emotion/react",
+      "@emotion/styled",
+    ],
     plugins: [
       // 自动将dependencies依赖声明为 externals
       nodeExternals({
@@ -42,9 +51,16 @@ export default [
         preventAssignment: true,
       }),
       typescript({
-        outDir: "dist",
+        outDir: "dist/esm",
         declaration: true,
-        declarationDir: "dist",
+        declarationDir: "dist/esm",
+      }),
+      terser(),
+      analyzer({
+        // 可选配置项，例如：
+        summaryOnly: true, // 只显示总览，不显示每个模块的详细信息
+        limit: 10, // 限制显示的模块数量
+        showExports: true, // 显示导出的信息
       }),
     ],
   },
