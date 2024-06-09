@@ -38,7 +38,7 @@ const PopoverTrigger = (props: PopoverTriggerProps, { ...stateprops }) => {
     crossOffset = 0,
     width = "8rem",
     height = "6rem",
-    backColor = "#2f2f39",
+    backColor = "#272727",
     borderColor = "#4a4a4a",
     containerPadding = 12,
     title,

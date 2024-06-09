@@ -20,7 +20,7 @@ const ModalTrigger = (props: ModalTriggerProps, { ...stateProps }) => {
     children,
     width = "18rem",
     height = "15rem",
-    backColor = "#000",
+    backColor = "#272727",
     borderColor = "#353535",
     zIndex = 100,
     isDismissable,
